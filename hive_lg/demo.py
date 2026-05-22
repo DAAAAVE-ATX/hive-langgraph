@@ -9,6 +9,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from hive_lg.graph import build_graph
+from hive_lg.llm import get_llm
 from hive_lg.state import initial_state
 
 
@@ -88,6 +89,12 @@ def main():
     print(f"Spec {chosen['id']}: {chosen['spec']}")
     print(f"Acceptance criteria: {chosen['acceptance_criteria']}")
     print()
+
+    try:
+        get_llm()
+    except RuntimeError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(2)
 
     graph = build_graph()
     final = graph.invoke(initial_state(chosen["spec"], chosen["acceptance_criteria"]))
