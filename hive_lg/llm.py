@@ -5,6 +5,7 @@ import os
 
 DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-6"
 DEFAULT_OLLAMA_MODEL = "llama3.1"
+DEFAULT_MAX_TOKENS = 2048
 
 
 def get_llm(provider=None, model=None):
@@ -28,7 +29,10 @@ def get_llm(provider=None, model=None):
     if provider == "anthropic":
         from langchain_anthropic import ChatAnthropic
 
-        return ChatAnthropic(model=model or DEFAULT_ANTHROPIC_MODEL)
+        return ChatAnthropic(
+            model=model or DEFAULT_ANTHROPIC_MODEL,
+            max_tokens=DEFAULT_MAX_TOKENS,
+        )
 
     if provider == "ollama":
         from langchain_ollama import ChatOllama
