@@ -15,6 +15,14 @@ The goal is to show one clean, runnable example of:
 
 ## Architecture
 
+The graph has three role types, each one LangGraph node:
+
+- **Q33N** (orchestrator): reads the incoming spec, classifies it (researcher / coder / writer), and routes to the matching worker.
+- **Worker bees** — `researcher_bee`, `coder_bee`, `writer_bee`: one LLM-backed node per output type. The worker reads the spec plus any prior BAT feedback and produces an answer.
+- **BAT** (acceptance tester, "build acceptance test"): a second LLM-backed node that validates the worker's output against the spec's acceptance criteria and emits a structured `pass` / `fail` verdict with reasoning.
+
+The diagram below is rendered with [Mermaid](https://mermaid.js.org/) (which GitHub renders natively inside fenced ` ```mermaid ` blocks). Arrows are LangGraph edges; labels on the BAT edges are the conditional-edge values.
+
 ```mermaid
 flowchart TD
     Start([start]) --> Q33N[q33n_orchestrator]
@@ -32,7 +40,7 @@ flowchart TD
     Cap --> End
 ```
 
-Q33N classifies the spec and routes to the matching worker. The worker produces output. BAT validates it against the acceptance criteria. On `fail`, BAT routes back to the same worker with its feedback in state; on `pass` or after three attempts, the graph ends.
+The loop: Q33N picks one worker. The worker writes to `state.worker_output`. BAT reads the output plus the acceptance criteria and decides. On `fail`, BAT writes its reasoning into `state.bat_feedback` and the graph routes back to the *same* worker for another attempt (the worker sees the prior feedback in its next prompt). On `pass`, or after three failed attempts, the graph ends.
 
 ## Quick start
 
@@ -55,7 +63,7 @@ This public reference intentionally drops the production concerns of the proprie
 - no persistence or event ledger; each run is fresh in memory,
 - no governance enforcement (ethics, carbon, grace budgets),
 - no real concurrency; nodes execute serially in the graph,
-- no surrogate models or speculative branching,
+- no surrogate models,
 - no speculative branching across alternate execution paths,
 - single tier of workers; no nested orchestration or subgraphs.
 
