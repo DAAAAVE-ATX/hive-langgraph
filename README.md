@@ -56,7 +56,7 @@ This public reference intentionally drops the production concerns of the proprie
 - no governance enforcement (ethics, carbon, grace budgets),
 - no real concurrency; nodes execute serially in the graph,
 - no surrogate models or speculative branching,
-- no Alterverse-style alternate-world exploration,
+- no speculative branching across alternate execution paths,
 - single tier of workers; no nested orchestration or subgraphs.
 
 What stays is the shape: orchestrator, typed workers, a validator that closes the loop, and a retry cap.
