@@ -18,7 +18,7 @@ The goal is to show one clean, runnable example of:
 The graph has three role types, each one LangGraph node:
 
 - **Q33N** (orchestrator): reads the incoming spec, classifies it (researcher / coder / writer), and routes to the matching worker.
-- **Worker bees** — `researcher_bee`, `coder_bee`, `writer_bee`: one LLM-backed node per output type. The worker reads the spec plus any prior BAT feedback and produces an answer.
+- **Worker bees** (`researcher_bee`, `coder_bee`, `writer_bee`): one LLM-backed node per output type. The worker reads the spec plus any prior BAT feedback and produces an answer.
 - **BAT** (acceptance tester, "build acceptance test"): a second LLM-backed node that validates the worker's output against the spec's acceptance criteria and emits a structured `pass` / `fail` verdict with reasoning.
 
 The diagram below is rendered with [Mermaid](https://mermaid.js.org/) (which GitHub renders natively inside fenced ` ```mermaid ` blocks). Arrows are LangGraph edges; labels on the BAT edges are the conditional-edge values.
